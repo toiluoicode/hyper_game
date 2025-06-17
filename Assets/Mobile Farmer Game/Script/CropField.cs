@@ -19,6 +19,7 @@ public class CropField : MonoBehaviour
     [Header("Action")]
     public static Action<CropField> onFullySow;
     public static Action<CropField> onFullyWaterd;
+    public static Action<CropField> onFullyHarvest;
     void Start()
     {
         state = TileFieldState.Empty;
