@@ -19,12 +19,12 @@ public class PlayerHarvestAbility : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        CropField.onFullyHarvest -= CropFieldFullyHarvestCallback;
-        playerToolSelector.onToolSelected -= ToolSelectorCallback;
+
     }
     void OnDestroy()
     {
-
+        CropField.onFullyHarvest -= CropFieldFullyHarvestCallback;
+        playerToolSelector.onToolSelected -= ToolSelectorCallback;
     }
     private void ToolSelectorCallback(PlayerToolSelector.Tool selectedTool)
     {
@@ -42,19 +42,26 @@ public class PlayerHarvestAbility : MonoBehaviour
     }
     private void EnteredCropField(CropField cropField)
     {
-        if (playerToolSelector.CanSow())
+
+        if (playerToolSelector.CanHarvest())
         {
+            if (currentCropField == null)
+            {
+                currentCropField = cropField;
+            }
+
             playerAnimator.PlayHarvestAnimtion();
         }
     }
-    private void OnTriggerEnter(Collider other)
+    public void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("CropField") && other.GetComponent<CropField>().IsWater())
         {
-            EnteredCropField(other.GetComponent<CropField>());
+            currentCropField = other.GetComponent<CropField>();
+            EnteredCropField(currentCropField);
         }
     }
-    private void OTriggerStay(Collider other)
+    public void OTriggerStay(Collider other)
     {
         if (other.CompareTag("CropField") && other.GetComponent<CropField>().IsWater())
         {
@@ -66,7 +73,12 @@ public class PlayerHarvestAbility : MonoBehaviour
         if (other.CompareTag("CropField"))
         {
             playerAnimator.StopHarvestAnimation();
+            currentCropField = null;
         }
     }
+    [NaughtyAttributes.Button]
+    public void testAnimationHarvest()
+    {
+        playerAnimator.PlayHarvestAnimtion();
+    }
 }
-
