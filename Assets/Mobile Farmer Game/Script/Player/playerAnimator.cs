@@ -66,7 +66,6 @@ public class playerAnimator : MonoBehaviour
     }
     public void StopHarvestAnimation()
     {
-        Debug.Log("Play Harvest animation");
         animator.SetLayerWeight(3, 0);
     }
 

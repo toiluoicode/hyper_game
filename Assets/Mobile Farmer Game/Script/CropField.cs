@@ -5,6 +5,7 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.PlayerLoop;
 using System;
+using UnityEngine.AI;
 
 public class CropField : MonoBehaviour
 {
@@ -13,6 +14,8 @@ public class CropField : MonoBehaviour
     private List<CropTile> cropTiles = new List<CropTile>();
     private int tileSows;
     private int tileWater;
+    private int tileHarvest;
+
     [Header("Setting")]
     [SerializeField] private CropData cropData;
     private TileFieldState state;
@@ -115,9 +118,43 @@ public class CropField : MonoBehaviour
     }
     public void FieldFullyWater()
     {
-        Debug.Log("Full water ");
         state = TileFieldState.Watered;
         onFullyWaterd?.Invoke(this);
+    }
+    public void Harvest(Transform sphereHarvest)
+    {
+        Debug.Log("Harvest CropFiled");
+        float sphereRadius = sphereHarvest.localScale.x;
+        for (int i = 0; i < cropTiles.Count; i++)
+        {
+            if (cropTiles[i].IsEmpty())
+            {
+                continue;
+            }
+            float distance = Vector3.Distance(sphereHarvest.position, cropTiles[i].transform.position);
+            if (distance < sphereRadius)
+            {
+                Debug.Log("Distance");
+                HarvestTile(cropTiles[i]);
+            }
+        }
+    }
+    private void HarvestTile(CropTile cropTile)
+    {
+        cropTile.Harvest();
+        tileHarvest++;
+        if (tileHarvest == cropTiles.Count)
+        {
+            FieldFullyHarvest();
+        }
+    }
+    public void FieldFullyHarvest()
+    {
+        tileSows = 0;
+        tileHarvest = 0;
+        tileHarvest = 0;
+        state = TileFieldState.Empty;
+        onFullyHarvest?.Invoke(this);
     }
     private CropTile GetClosetCropTile(Vector3 seedPosition)
     {
@@ -153,7 +190,6 @@ public class CropField : MonoBehaviour
     {
         return state == TileFieldState.Watered;
     }
-
 
 
 }
