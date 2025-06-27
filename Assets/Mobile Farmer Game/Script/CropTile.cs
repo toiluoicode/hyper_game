@@ -56,6 +56,11 @@ public class CropTile : MonoBehaviour
     //     }
     //     yield return null;
     // }
-
+    public void Harvest()
+    {
+        state = TileFieldState.Empty;
+        crop.ScaleDown();
+        tileMeshRendered.gameObject.LeanColor(Color.white, 1);
+    }
 
 }

@@ -19,7 +19,7 @@ public class Crop : MonoBehaviour
     public void ScaleUp()
     {
         // StartCoroutine("ScaleUpCoroutine");
-        cropRenderer.gameObject.LeanScale(Vector3.one, 5);
+        cropRenderer.gameObject.LeanScale(Vector3.one, 1);
     }
     // IEnumerator ScaleUpCoroutine()
     // {
@@ -36,4 +36,8 @@ public class Crop : MonoBehaviour
 
     //     yield return null;
     // }
+    public void ScaleDown()
+    {
+        cropRenderer.gameObject.LeanScale(Vector3.one, 0).setEase(LeanTweenType.easeOutBack).setOnComplete(() => Destroy(gameObject));
+    }
 }
